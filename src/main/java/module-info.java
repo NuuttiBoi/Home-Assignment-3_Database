@@ -10,6 +10,7 @@ module org.example.home_assingment3 {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.sql;
 
     opens org.example.home_assingment3 to javafx.fxml;
     exports org.example.home_assingment3;

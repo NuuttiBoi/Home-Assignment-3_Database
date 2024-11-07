@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import java.sql.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -36,7 +37,7 @@ public class Main extends Application {
         languageSelector = new ComboBox<>();
 
         languageSelector.getItems().addAll("English", "Farsi", "Japanese");
-        languageSelector.setValue("English"); // Default selection
+        languageSelector.setValue("English");
 
         languageSelector.setOnAction(event -> {
             String selectedLanguage = languageSelector.getValue();
@@ -53,6 +54,8 @@ public class Main extends Application {
             }
             updateLabels();
         });
+
+
 
         TextField firstNameField = new TextField();
         TextField lastNameField = new TextField();
@@ -75,6 +78,28 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Multilingual UI Example");
         primaryStage.show();
+
+        saveButton.setOnAction(event -> {
+            String firstName = firstNameField.getText();
+            String lastName = lastNameField.getText();
+            String email = "example@example.com"; // Replace with email input field if added
+            String selectedLanguage = languageSelector.getValue();
+
+            String languageCode;
+            switch (selectedLanguage) {
+                case "Farsi":
+                    languageCode = "fa";
+                    break;
+                case "Japanese":
+                    languageCode = "ja";
+                    break;
+                default:
+                    languageCode = "en";
+                    break;
+            }
+
+            saveUser(firstName, lastName, email, languageCode);
+        });
     }
 
     private void setLanguage(String languageCode) {
@@ -86,5 +111,33 @@ public class Main extends Application {
         firstNameLabel.setText(bundle.getString("label.firstName"));
         lastNameLabel.setText(bundle.getString("label.lastName"));
         saveButton.setText(bundle.getString("button.save"));
+    }
+    private void saveUser(String firstName, String lastName, String email, String languageCode) {
+        String insertEmployeeSQL = "INSERT INTO employee (email) VALUES (?)";
+        String insertTranslationSQL = "INSERT INTO employee_translations (employee_id, language_code, first_name, last_name) VALUES (?, ?, ?, ?)";
+
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            PreparedStatement employeeStmt = connection.prepareStatement(insertEmployeeSQL, Statement.RETURN_GENERATED_KEYS);
+            employeeStmt.setString(1, email);
+            employeeStmt.executeUpdate();
+
+            ResultSet generatedKeys = employeeStmt.getGeneratedKeys();
+            int employeeId = 0;
+            if (generatedKeys.next()) {
+                employeeId = generatedKeys.getInt(1);
+            }
+
+            PreparedStatement translationStmt = connection.prepareStatement(insertTranslationSQL);
+            translationStmt.setInt(1, employeeId);
+            translationStmt.setString(2, languageCode);
+            translationStmt.setString(3, firstName);
+            translationStmt.setString(4, lastName);
+            translationStmt.executeUpdate();
+
+            System.out.println("User saved successfully!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
