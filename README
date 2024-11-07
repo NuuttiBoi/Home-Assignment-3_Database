@@ -1,4 +1,3 @@
-## JavaFX Multilingual User Interface
 
 This JavaFX application demonstrates a multilingual user interface that dynamically updates labels and button text based on the selected language (English, Farsi, or Japanese). Users can select their preferred language from a dropdown menu, and the UI updates in real-time.
 
