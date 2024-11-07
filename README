@@ -1,30 +1,6 @@
+# JavaFX Multilingual User Interface
 
-- **Main.java**: Contains the main JavaFX application code.
-- **messages_*.properties**: Resource files for each supported language.
+This JavaFX application demonstrates a multilingual user interface that dynamically updates labels and button text based on the selected language (English, Farsi, or Japanese). Users can select their preferred language from a dropdown menu, and the UI updates in real-time.
 
-## Languages Supported
+## Project Structure
 
-- **English** (`messages_en.properties`)
-- **Farsi** (`messages_fa.properties`)
-- **Japanese** (`messages_ja.properties`)
-
-Each `.properties` file contains translations for UI labels and button text.
-
-## Features
-
-- **Dynamic Language Switching**: Users can choose from English, Farsi, or Japanese. The UI updates automatically.
-- **Localized Labels and Button Text**: Text fields, labels, and the save button adapt to the selected language.
-
-## Getting Started
-
-### Prerequisites
-
-- **Java Development Kit (JDK)**: Version 8 or later
-- **JavaFX**: Ensure that JavaFX libraries are set up if using a standalone JDK
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/javafx-multilingual-ui.git
-   cd javafx-multilingual-ui
