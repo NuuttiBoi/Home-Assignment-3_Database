@@ -28,20 +28,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Initial language setup
         setLanguage("en");
 
-        // Create UI components
         firstNameLabel = new Label();
         lastNameLabel = new Label();
         saveButton = new Button();
         languageSelector = new ComboBox<>();
 
-        // Populate language options
         languageSelector.getItems().addAll("English", "Farsi", "Japanese");
         languageSelector.setValue("English"); // Default selection
 
-        // Set event handler for language changes
         languageSelector.setOnAction(event -> {
             String selectedLanguage = languageSelector.getValue();
             switch (selectedLanguage) {
@@ -58,11 +54,9 @@ public class Main extends Application {
             updateLabels();
         });
 
-        // Create text fields for user input
         TextField firstNameField = new TextField();
         TextField lastNameField = new TextField();
 
-        // Arrange components in a grid
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
         gridPane.setHgap(10);
@@ -75,23 +69,19 @@ public class Main extends Application {
         gridPane.add(lastNameField, 1, 2);
         gridPane.add(saveButton, 0, 3, 2, 1);
 
-        // Initial label update
         updateLabels();
 
-        // Set up the scene and stage
         Scene scene = new Scene(gridPane, 300, 200);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Multilingual UI Example");
         primaryStage.show();
     }
 
-    // Load the language resource bundle
     private void setLanguage(String languageCode) {
         Locale locale = new Locale(languageCode);
         bundle = ResourceBundle.getBundle("message", locale);
     }
 
-    // Update labels and button text based on the selected language
     private void updateLabels() {
         firstNameLabel.setText(bundle.getString("label.firstName"));
         lastNameLabel.setText(bundle.getString("label.lastName"));
