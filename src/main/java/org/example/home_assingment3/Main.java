@@ -3,10 +3,7 @@ package org.example.home_assingment3;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -16,9 +13,11 @@ import java.util.ResourceBundle;
 
 public class Main extends Application {
 
-    private Label firstNameLabel;
-    private Label lastNameLabel;
+    private Label distanceLabel;
+    private Label fuelLabel;
     private Button saveButton;
+    private Label resultLabel;
+    private Label errorLabel;
     private ComboBox<String> languageSelector;
 
     private ResourceBundle bundle;
@@ -31,12 +30,14 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         setLanguage("en");
 
-        firstNameLabel = new Label();
-        lastNameLabel = new Label();
+        distanceLabel = new Label();
+        fuelLabel = new Label();
         saveButton = new Button();
+        resultLabel = new Label();
+        errorLabel = new Label();
         languageSelector = new ComboBox<>();
 
-        languageSelector.getItems().addAll("English", "Farsi", "Japanese");
+        languageSelector.getItems().addAll("English", "Farsi", "Japanese", "French");
         languageSelector.setValue("English");
 
         languageSelector.setOnAction(event -> {
@@ -48,6 +49,9 @@ public class Main extends Application {
                 case "Japanese":
                     setLanguage("ja");
                     break;
+                case "French":
+                    setLanguage("fr");
+                    break;
                 default:
                     setLanguage("en");
                     break;
@@ -57,8 +61,8 @@ public class Main extends Application {
 
 
 
-        TextField firstNameField = new TextField();
-        TextField lastNameField = new TextField();
+        TextField distanceField = new TextField();
+        TextField fuelField = new TextField();
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
@@ -66,23 +70,35 @@ public class Main extends Application {
         gridPane.setVgap(10);
 
         gridPane.add(languageSelector, 0, 0, 2, 1);
-        gridPane.add(firstNameLabel, 0, 1);
-        gridPane.add(firstNameField, 1, 1);
-        gridPane.add(lastNameLabel, 0, 2);
-        gridPane.add(lastNameField, 1, 2);
+        gridPane.add(distanceLabel, 0, 1);
+        gridPane.add(distanceField, 1, 1);
+        gridPane.add(fuelLabel, 0, 2);
+        gridPane.add(fuelField, 1, 2);
         gridPane.add(saveButton, 0, 3, 2, 1);
+        gridPane.add(resultLabel, 0,4,2,1);
+        gridPane.add(errorLabel, 0,5,2,1);
 
         updateLabels();
 
-        Scene scene = new Scene(gridPane, 300, 200);
+        Scene scene = new Scene(gridPane, 300, 300);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Multilingual UI Example");
+        primaryStage.setTitle("Nuutti Turunen");
         primaryStage.show();
 
         saveButton.setOnAction(event -> {
-            String firstName = firstNameField.getText();
-            String lastName = lastNameField.getText();
-            String email = "example@example.com"; // Replace with email input field if added
+            try {
+                double firstName = Double.parseDouble(distanceField.getText());
+                double lastName = Double.parseDouble(fuelField.getText());
+
+                ConsumptionRecord consumptionRecord = new ConsumptionRecord(firstName, lastName);
+
+                System.out.println(consumptionRecord.calculateConsumption());
+                resultLabel.setText(String.valueOf(consumptionRecord.calculateConsumption()));
+            } catch (Exception e){
+                e.printStackTrace();
+                errorLabel.setText(bundle.getString("errorLabel"));
+            }
+
             String selectedLanguage = languageSelector.getValue();
 
             String languageCode;
@@ -93,12 +109,15 @@ public class Main extends Application {
                 case "Japanese":
                     languageCode = "ja";
                     break;
+                case "French":
+                    languageCode= "fr";
+                    break;
                 default:
                     languageCode = "en";
                     break;
             }
 
-            saveUser(firstName, lastName, email, languageCode);
+            //saveUser(firstName, lastName, email, languageCode);
         });
     }
 
@@ -108,9 +127,10 @@ public class Main extends Application {
     }
 
     private void updateLabels() {
-        firstNameLabel.setText(bundle.getString("label.firstName"));
-        lastNameLabel.setText(bundle.getString("label.lastName"));
+        distanceLabel.setText(bundle.getString("label.firstName"));
+        fuelLabel.setText(bundle.getString("label.lastName"));
         saveButton.setText(bundle.getString("button.save"));
+        resultLabel.setText(bundle.getString("resultLabel"));
     }
     private void saveUser(String firstName, String lastName, String email, String languageCode) {
         String insertEmployeeSQL = "INSERT INTO employee (email) VALUES (?)";
